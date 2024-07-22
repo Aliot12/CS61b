@@ -3,6 +3,7 @@ package game2048logic;
 import game2048rendering.Board;
 import game2048rendering.Side;
 import game2048rendering.Tile;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Formatter;
 
@@ -15,7 +16,7 @@ public class Model {
     private final Board board;
     /** Current score. */
     private int score;
-
+    private int flag;
     /* Coordinate System: column x, row y of the board (where x = 0,
      * y = 0 is the lower-left corner of the board) will correspond
      * to board.tile(x, y).  Be careful!
@@ -73,18 +74,38 @@ public class Model {
      *  there is a tile with value 2048 on the board). */
     public boolean gameOver() {
         return maxTileExists() || !atLeastOneMoveExists();
-    }
+    }//通关true 失败false
 
     /** Returns this Model's board. */
     public Board getBoard() {
         return board;
     }
 
+    public boolean Canwarge(Board b, int x, int y) {
+        if(x > 0 && b.tile(x-1,y)!=null && b.tile(x,y).value() == b.tile(x-1,y).value()){
+            return true;
+        }
+        if(y > 0 && b.tile(x,y-1)!=null && b.tile(x,y).value() == b.tile(x,y-1).value()){
+            return true;
+        }
+        if(x < size()-1 && b.tile(x+1,y)!=null && b.tile(x,y).value() == b.tile(x+1,y).value()){
+            return true;
+        }
+        if(y < size()-1 && b.tile(x,y+1)!=null && b.tile(x,y).value() == b.tile(x,y+1).value()){
+            return true;
+        }
+        return false;
+    }
     /** Returns true if at least one space on the Board is empty.
      *  Empty spaces are stored as null.
      * */
     public boolean emptySpaceExists() {
-        // TODO: Task 2. Fill in this function.
+        flag = 0;
+        for(int x = 0; x < size(); x++) {
+            for(int y = 0; y < size(); y++) {
+                if(getBoard().tile(x,y)==null)return true;
+                if(Canwarge(getBoard(),x,y)){flag = 1;}
+            }}
         return false;
     }
 
@@ -94,8 +115,11 @@ public class Model {
      * given a Tile object t, we get its value with t.value().
      */
     public boolean maxTileExists() {
-        // TODO: Task 3. Fill in this function.
+        for(int x = 0; x < size(); x++) {
+            for(int y = 0; y < size(); y++) {
+                if( getBoard().tile(x,y) != null && getBoard().tile(x,y).value()==MAX_PIECE)return true;}}
         return false;
+        // TODO: Task 3. Fill in this function.
     }
 
     /**
@@ -105,6 +129,8 @@ public class Model {
      * 2. There are two adjacent tiles with the same value.
      */
     public boolean atLeastOneMoveExists() {
+        if(emptySpaceExists()) return true;
+        else if(flag == 1)return true;
         // TODO: Fill in this function.
         return false;
     }
