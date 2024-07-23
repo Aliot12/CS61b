@@ -53,9 +53,7 @@ public class Tile {
 
     /** Return a new tile at (x, y) with value VALUE. */
     public static Tile create(int value, int x, int y) {
-        return new Tile(value, x, y);
-    }
-
+        return new Tile(value, x, y);}
     /** Return the distance in rows or columns between me and my successor
      *  tile (0 if I have no successor). */
     int distToNext() {

@@ -82,7 +82,7 @@ public class Model {
         return board;
     }
 
-    public boolean Canwarge(Board b, int x, int y) {
+    public boolean Canmerge(Board b, int x, int y) {
         if(x > 0 && b.tile(x-1,y)!=null && b.tile(x,y).value() == b.tile(x-1,y).value()){
             return true;
         }
@@ -105,7 +105,7 @@ public class Model {
         for(int x = 0; x < size(); x++) {
             for(int y = 0; y < size(); y++) {
                 if(getBoard().tile(x,y)==null)return true;
-                if(Canwarge(getBoard(),x,y)){flag = 1;}
+                if(Canmerge(getBoard(),x,y)){flag = 1;}
             }}
         return false;
     }
@@ -155,23 +155,22 @@ public class Model {
         int myValue = currTile.value();
         int targetY = y;
         int flag2 = 0;
-
-            while (targetY < size() - 1) {
-                targetY = targetY + 1;
-                if (board.tile(x,targetY) == null){
-                    continue;
+        while (targetY < size() - 1) {
+            targetY = targetY + 1;
+            Tile targetTile = board.tile(x, targetY);
+            if (targetTile == null){
+                continue;
                 }
-                if (board.tile(x,targetY).value() != myValue || board.tile(x,targetY).wasMerged()){
-                    flag2 = 1;
-                    if(targetY - 1 != y) board.move(x,targetY-1,currTile);
-                    break;
+            if (targetTile.value() != myValue ||targetTile.wasMerged()){
+                flag2 = 1;
+                if(targetY - 1 != y) board.move(x,targetY-1,currTile);
+                break;
                 }
-                else
-                {
-                    flag2 = 1;
-                    board.move(x,targetY,currTile);
-                    score = score + board.tile(x,targetY).value();
-                    break;
+            else {
+                flag2 = 1;
+                board.move(x,targetY,currTile);
+                score = score + board.tile(x,targetY).value();
+                break;
                 }
             }
             if(flag2 == 0){

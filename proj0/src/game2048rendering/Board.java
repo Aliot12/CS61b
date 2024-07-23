@@ -13,7 +13,7 @@ public class Board {
     private Side _viewPerspective;
 
     public Board(int size) {
-        _values = new Tile[size][size];
+        _values = new Tile[size][size];//用来表示矩阵的tile，作为盘
         _viewPerspective = Side.NORTH;
     }
 
@@ -25,12 +25,12 @@ public class Board {
     /** Create a board where RAWVALUES hold the values of the tiles on the board 
      * (0 is null) with a current score of SCORE and the viewing perspective set to north. */
     public Board(int[][] rawValues) {
-        int size = rawValues.length;
+        int size = rawValues.length;//rawvalues是数的矩阵表示每一个tile的值
         _values = new Tile[size][size];
         _viewPerspective = Side.NORTH;
         for (int x = 0; x < size; x += 1) {
             for (int y = 0; y < size; y += 1) {
-                int value = rawValues[size - 1 - y][x];
+                int value = rawValues[size - 1 - y][x];//遍历盘的每一个角落，如果有值，则创造一个块
                 Tile tile;
                 if (value == 0) {
                     tile = null;
@@ -62,7 +62,7 @@ public class Board {
     /** Clear the board to empty and reset the score. */
     public void clear() {
         for (Tile[] column : _values) {
-            Arrays.fill(column, null);
+            Arrays.fill(column, null);//清空棋盘
         }
     }
 
@@ -81,10 +81,10 @@ public class Board {
      * */
     public void move(int x, int y, Tile tile) {
         int px = _viewPerspective.x(x, y, size());
-        int py = _viewPerspective.y(x, y, size());
+        int py = _viewPerspective.y(x, y, size());//包括 合并 无法合并
 
-        Tile tile1 = vtile(x, y, _viewPerspective);
-        _values[tile.x()][tile.y()] = null;
+        Tile tile1 = vtile(x, y, _viewPerspective);//将要去的位置
+        _values[tile.x()][tile.y()] = null;//移动时 原来的位置为空，如果能的化
 
         // Move or merge the tile. It is important to call setNext
         // on the old tile(s) so they can be animated into position
@@ -99,7 +99,7 @@ public class Board {
             tile1.setNext(next);
         }
         tile.setMerged(tile1 != null);
-        next.setMerged(tile.wasMerged());
+        next.setMerged(tile.wasMerged());//重新看tile
         tile.setNext(next);
         _values[px][py] = next;
     }
@@ -109,7 +109,7 @@ public class Board {
         for (int x = 0; x < size(); x += 1) {
             for (int y = 0; y < size(); y += 1) {
                 if (_values[x][y] != null){
-                    _values[x][y].setMerged(false);
+                    _values[x][y].setMerged(false);//初始化merge
                 }
             }
         }
