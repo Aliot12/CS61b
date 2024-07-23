@@ -17,6 +17,7 @@ public class Model {
     /** Current score. */
     private int score;
     private int flag;
+
     /* Coordinate System: column x, row y of the board (where x = 0,
      * y = 0 is the lower-left corner of the board) will correspond
      * to board.tile(x, y).  Be careful!
@@ -153,6 +154,31 @@ public class Model {
         Tile currTile = board.tile(x, y);
         int myValue = currTile.value();
         int targetY = y;
+        int flag2 = 0;
+
+            while (targetY < size() - 1) {
+                targetY = targetY + 1;
+                if (board.tile(x,targetY) == null){
+                    continue;
+                }
+                if (board.tile(x,targetY).value() != myValue || board.tile(x,targetY).wasMerged()){
+                    flag2 = 1;
+                    if(targetY - 1 != y) board.move(x,targetY-1,currTile);
+                    break;
+                }
+                else
+                {
+                    flag2 = 1;
+                    board.move(x,targetY,currTile);
+                    score = score + board.tile(x,targetY).value();
+                    break;
+                }
+            }
+            if(flag2 == 0){
+                board.move(x,targetY,currTile);
+            }
+
+
 
         // TODO: Tasks 5, 6, and 10. Fill in this function.
     }
@@ -163,10 +189,18 @@ public class Model {
      * so we are tilting the tiles in this column up.
      * */
     public void tiltColumn(int x) {
+        for(int y = size()-2; y >= 0; y--) {
+            if(board.tile(x,y) != null) moveTileUpAsFarAsPossible(x,y);
+        }
         // TODO: Task 7. Fill in this function.
     }
 
     public void tilt(Side side) {
+        board.setViewingPerspective(side);
+        for(int x = 0; x < size(); x++) {
+            tiltColumn(x);
+        }
+        board.setViewingPerspective(Side.NORTH);
         // TODO: Tasks 8 and 9. Fill in this function.
     }
 
