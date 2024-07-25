@@ -88,7 +88,8 @@ public class ArrayDeque61B <T>implements Deque61B<T>{
 
     @Override
     public T getRecursive(int index) {
-        return null;
+        if(size==0)return null;
+        return array[Math.floorMod(index,length)];
     }
     public void ArryCopy(Deque61B<T> OntherArry){
         if(OntherArry instanceof ArrayDeque61B<T>OtArry){
