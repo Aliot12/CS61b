@@ -16,21 +16,20 @@ public class ArrayDeque61B <T>implements Deque61B<T>{
         length = 8;
 
     }
-    private void AddHelper(){
-        if(size != length) return;
+    private void AddHelper(int len){
         nextfirst = nextfirst + 1;
-        T[] alb = (T[])new Object[length * 2];
-        for(int i = 0; i < length; i++){
+        T[] alb = (T[])new Object[len];
+        for(int i = 0; i < size; i++){
             alb[i] = get(Math.floorMod(nextfirst++,length));
         }
         this.array = alb;
-        nextlast = length;
-        length = length*2;
+        nextlast = size;
+        length = len;
         nextfirst = length - 1;
     }
     @Override
     public void addFirst(T x) {
-        AddHelper();
+        if(size == length) AddHelper(length*2);
         array[nextfirst] = x;
         nextfirst = Math.floorMod(nextfirst-1,length);
         size += 1;
@@ -38,7 +37,7 @@ public class ArrayDeque61B <T>implements Deque61B<T>{
 
     @Override
     public void addLast(T x) {
-        AddHelper();
+        if(size == length) AddHelper(length*2);
         array[nextlast] = x;
         nextlast = Math.floorMod(nextlast+1,length);
         size += 1;
@@ -68,6 +67,7 @@ public class ArrayDeque61B <T>implements Deque61B<T>{
 
     @Override
     public T removeFirst() {
+        if(size < length/4) AddHelper(length/4);
         nextfirst = Math.floorMod(nextfirst+1,length);
         size--;
         return array[nextfirst];
@@ -75,6 +75,7 @@ public class ArrayDeque61B <T>implements Deque61B<T>{
 
     @Override
     public T removeLast() {
+        if(size < length/4) AddHelper(length/4);
         nextlast = Math.floorMod(nextlast-1,length);
         size--;
         return array[nextlast];

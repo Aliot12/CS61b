@@ -57,4 +57,25 @@ public class LinkedListDeque61BTest {
      }
 
     // Below, you'll write your own tests for LinkedListDeque61B.
+    @Test
+    public  void RemoveAndEmptyTest(){
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        lld1.addLast(0);   // [0]
+        lld1.addLast(1);   // [0, 1]
+        lld1.addFirst(-1); // [-1, 0, 1]
+        lld1.addLast(2);   // [-1, 0, 1, 2]
+        lld1.addFirst(-2); // [-2, -1, 0, 1, 2]
+        lld1.removeFirst();
+        Deque61B<Integer> lld2 = new LinkedListDeque61B<>();
+        for(int i = 0; i < lld1.size();i++){
+            lld2.addLast(lld1.getRecursive(i));
+        }
+        assertThat(lld1.toList()).containsExactly( -1, 0, 1, 2).inOrder();
+        assertThat(lld2.toList()).containsExactly( -1, 0, 1, 2).inOrder();
+        while (!lld1.isEmpty()) {
+            lld1.removeFirst();
+        }
+        assertThat(lld1.toList()).containsExactly( ).inOrder();
+    }
+
 }

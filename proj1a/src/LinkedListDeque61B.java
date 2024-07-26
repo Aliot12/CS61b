@@ -24,6 +24,8 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
     private Node last;
     private Node first;
 
+
+
     public LinkedListDeque61B(){
         sentinelone = new Node();
         sentineltwo = new Node();
@@ -67,8 +69,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) return true;
-        return false;
+        return size == 0;
     }
 
     @Override
@@ -87,12 +88,13 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
         tmp.previous = null;
         tmp.next = null;
         size -= 1;
+        if(size == 0)last = sentinelone;
         return date;
     }
 
     @Override
     public T removeLast() {
-        Node tmp = first;
+        Node tmp = last;
         T date = tmp.date;
         last.previous.next = sentineltwo;
         sentineltwo.previous = last.previous;
@@ -101,16 +103,27 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
         tmp.previous = null;
         tmp.next = null;
         size -= 1;
+        if(size == 0)first = sentineltwo;
         return date;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index > size)return null;
+        Node tmp = first;
+        while (index-- > 0){
+            tmp = tmp.next;
+        }
+        return tmp.date;
     }
-
+private  T getReHelp(Node node , int index){
+        if(index == 0) return node.date;
+        return getReHelp(node.next,index-1);
+}
     @Override
+
     public T getRecursive(int index) {
-        return null;
+        if(index < 0 || index > size) return null;
+        return getReHelp(first, index);
     }
 }
