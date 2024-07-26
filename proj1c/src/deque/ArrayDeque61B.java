@@ -144,30 +144,30 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
             nextlast = OtArry.size;
         }
     }
-    public class MaxArrayDeque61B extends ArrayDeque61B{
-        Comparator comparator;
-        public MaxArrayDeque61B(Comparator<T> c){
-            super();
-            comparator = c;
-        }
-        public T max(){
-            if(size == 0) return null;
-            T max = (T) get(0);
-            for (Object i: this){
-                if(comparator.compare(max,i) > 0){
-                    max = (T) i ;
-                }
-            }
-            return max;
-        }
-        public T max(Comparator<T> c){
-            T max = (T) get(0);
-            for (Object i: this){
-                if(c.compare(max,(T) i) > 0){
-                    max = (T) i ;
-                }
-            }
-            return max;
-        }
-    }
+//    public class MaxArrayDeque61B extends ArrayDeque61B{
+//        Comparator comparator;
+//        public MaxArrayDeque61B(Comparator<T> c){
+//            super();
+//            comparator = c;
+//        }
+//        public T max(){
+//            if(size == 0) return null;
+//            T max = (T) get(0);
+//            for (Object i: this){
+//                if(comparator.compare(max,i) > 0){
+//                    max = (T) i ;
+//                }
+//            }
+//            return max;
+//        }
+//        public T max(Comparator<T> c){
+//            T max = (T) get(0);
+//            for (Object i: this){
+//                if(c.compare(max,(T) i) > 0){
+//                    max = (T) i ;
+//                }
+//            }
+//            return max;
+//        }
+//    }
 }
