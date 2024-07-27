@@ -30,10 +30,7 @@ public class UnionFind {
 
     /* Returns true if nodes/vertices V1 and V2 are connected. */
     public boolean connected(int v1, int v2) {
-        while (parent(v1) > 0){
-            if(parent(v1) == v2)return true;
-            v1 = parent(v1);
-        }
+            if(find(v1) == find(v2))return true;
         // TODO: YOUR CODE HERE
         return false;
     }
