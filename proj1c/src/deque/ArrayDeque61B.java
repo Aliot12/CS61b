@@ -3,7 +3,6 @@ package deque;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Comparator;
 public class ArrayDeque61B<T> implements Deque61B<T> {
     private  T[] array;
     private int nextfirst;
@@ -19,11 +18,18 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         length = 8;
 
     }
+    public ArrayDeque61B(int len){
+        array =  (T[])new Object[len];
+        nextfirst = 0;
+        nextlast = 1;
+        size = 0;
+        length = len;
+
+    }
     private void AddHelper(int len){
-        nextfirst = nextfirst + 1;
         T[] alb = (T[])new Object[len];
         for(int i = 0; i < size; i++){
-            alb[i] = get(Math.floorMod(nextfirst++,length));
+            alb[i] = get(i);
         }
         this.array = alb;
         nextlast = size;
@@ -50,9 +56,8 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     public List<T> toList() {
         if (size == 0) return null;
         List<T> list=  new ArrayList<>();
-        int tmp = nextfirst + 1;
         for(int i = 0; i < size; i++){
-            list.add(get(Math.floorMod(tmp++,length)));
+            list.add(get(i));
         }
         return list;
     }
@@ -87,13 +92,13 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     @Override
     public T get(int index) {
         if(size==0)return null;
-        return array[Math.floorMod(index,length)];
+        return array[Math.floorMod(nextfirst+ 1 +index,length)];
     }
 
     @Override
     public T getRecursive(int index) {
         if(size==0)return null;
-        return array[Math.floorMod(index,length)];
+        return array[Math.floorMod(nextfirst+ 1 +index,length)];
     }
 
     private class Arrayiterator<T> implements Iterator<T>{
@@ -122,52 +127,28 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     public boolean equals(Object o){
         if(o instanceof LinkedListDeque61B<?>A)
             if(size != A.size())return false;
-        int pot = nextfirst + 1;
+        int pot = 0;
         if(o instanceof ArrayDeque61B<?> A)
             for (Object i : A){
-                if(!i.equals(array[Math.floorMod(pot++,length)]))return false;
+                if(!i.equals(get(pot++)))return false;
             }
         return true;
     }
+    @Override
     public String toString(){
         return toList().toString();
     }
 
     public void ArryCopy(Deque61B<T> OntherArry){
         if(OntherArry instanceof ArrayDeque61B<T>OtArry){
-            int tmp = OtArry.nextfirst + 1;
-            for(int i = 0; i < OntherArry.size(); i++) {
-                array[i] = OntherArry.get(Math.floorMod(tmp++, OtArry.length));
-                size++;
+            T[] alb = (T[])new Object[OtArry.size()];
+            for(int i = 0; i < size; i++){
+                alb[i] = get(i);
             }
+            this.array = alb;
+            nextlast = size;
+            length =  OntherArry.size();
             nextfirst = length - 1;
-            nextlast = OtArry.size;
+            }
         }
-    }
-//    public class MaxArrayDeque61B extends ArrayDeque61B{
-//        Comparator comparator;
-//        public MaxArrayDeque61B(Comparator<T> c){
-//            super();
-//            comparator = c;
-//        }
-//        public T max(){
-//            if(size == 0) return null;
-//            T max = (T) get(0);
-//            for (Object i: this){
-//                if(comparator.compare(max,i) > 0){
-//                    max = (T) i ;
-//                }
-//            }
-//            return max;
-//        }
-//        public T max(Comparator<T> c){
-//            T max = (T) get(0);
-//            for (Object i: this){
-//                if(c.compare(max,(T) i) > 0){
-//                    max = (T) i ;
-//                }
-//            }
-//            return max;
-//        }
-//    }
 }
