@@ -40,7 +40,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
     public List<Integer> years() {
         Set<Integer> keys= keySet();
         // TODO: Fill in this method.
-        return new ArrayList<>(keys);
+        return new ArrayList<>(keys);//list的创建不熟练
     }
 
     /**
@@ -49,7 +49,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public List<Double> data() {
         // TODO: Fill in this method.
-        return new ArrayList<>(values());
+        return new ArrayList<>(values());//GDP修改1 因为不知道value（）返回的和subset的顺序一样
     }
 
     /**
@@ -67,8 +67,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
         if(years().isEmpty() && keys2.isEmpty())return New;
         New.putAll(this);
         for(int i : keys2){
-            if(containsKey(i))New.put(i , ts.get(i) + get(i)) ;
-            else New.put(i,ts.get(i));
+            New.put(i , ts.get(i) + getOrDefault(i,0.0));//GDP修改2 因为不知道这个类字典用法
         }
         // TODO: Fill in this method.
         return New;
@@ -93,7 +92,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
             New.put(i,get(i)/ts.get(i));
         }
         // TODO: Fill in this method.
-        return null;
+        return New;
     }
 
     // TODO: Add any private helper methods.
