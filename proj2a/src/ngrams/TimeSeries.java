@@ -29,7 +29,8 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public TimeSeries(TimeSeries ts, int startYear, int endYear) {
         super();
-        this.putAll(ts.subMap(startYear,endYear+1));
+        if(startYear<MIN_YEAR || endYear > MAX_YEAR)return;
+        this.putAll(ts.subMap(startYear,endYear+1));//一开始没看到putALLL
         // TODO: Fill in this constructor.
     }
 
@@ -91,7 +92,6 @@ public class TimeSeries extends TreeMap<Integer, Double> {
             if(!ts.containsKey(i)) throw new IllegalArgumentException();
             New.put(i,get(i)/ts.get(i));
         }
-        // TODO: Fill in this method.
         return New;
     }
 
