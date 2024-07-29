@@ -1,7 +1,6 @@
 package ngrams;
 
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * An object for mapping a year number (e.g. 1996) to numerical data. Provides
@@ -30,15 +29,18 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public TimeSeries(TimeSeries ts, int startYear, int endYear) {
         super();
+        this.putAll(ts.subMap(startYear,endYear+1));
         // TODO: Fill in this constructor.
     }
+
 
     /**
      * Returns all years for this TimeSeries (in any order).
      */
     public List<Integer> years() {
+        Set<Integer> keys= keySet();
         // TODO: Fill in this method.
-        return null;
+        return new ArrayList<>(keys);
     }
 
     /**
@@ -47,7 +49,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public List<Double> data() {
         // TODO: Fill in this method.
-        return null;
+        return new ArrayList<>(values());
     }
 
     /**
@@ -60,8 +62,16 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * should store the value from the TimeSeries that contains that year.
      */
     public TimeSeries plus(TimeSeries ts) {
+        TimeSeries New = new TimeSeries();
+        List<Integer>keys2 = ts.years();//这里得到了两个整数列表 问题是怎么处理两个列表一个有一个没有的key
+        if(years().isEmpty() && keys2.isEmpty())return New;
+        New.putAll(this);
+        for(int i : keys2){
+            if(containsKey(i))New.put(i , ts.get(i) + get(i)) ;
+            else New.put(i,ts.get(i));
+        }
         // TODO: Fill in this method.
-        return null;
+        return New;
     }
 
     /**
@@ -74,6 +84,14 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * If TS has a year that is not in this TimeSeries, ignore it.
      */
     public TimeSeries dividedBy(TimeSeries ts) {
+        TimeSeries New = new TimeSeries();
+        List<Integer>keys2 = ts.years();
+        if(years().isEmpty() && keys2.isEmpty())return New;
+        New.putAll(this);
+        for(int i:years()){
+            if(!ts.containsKey(i)) throw new IllegalArgumentException();
+            New.put(i,get(i)/ts.get(i));
+        }
         // TODO: Fill in this method.
         return null;
     }
