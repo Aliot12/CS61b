@@ -115,18 +115,17 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @param item
      * @return
      */
+
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         // TODO: Insert (return) new red leaf node.
-        if(node != null){
-            int cmp = node.item.compareTo(item);
-            if(cmp > 0)insert(node.left,item);
-            else if(cmp < 0)insert(node.right,item);
-            else return null;
+        if(node == null) return new RBTreeNode<>(false,item);
+        int cmp = node.item.compareTo(item);
+        RBTreeNode child = (cmp > 0) ? node.left : node.right;
+        if(child == null){
+            if(cmp > 0) node.left = new RBTreeNode<>(false,item);
+            else node.right = new RBTreeNode<>(false,item);
         }
-        if(node == null) {
-            node = new RBTreeNode<>(false,item);
-
-        }
+        else insert(child,item);
         // TODO: Handle normal binary search tree insertion.
 
         // TODO: Rotate left operation
