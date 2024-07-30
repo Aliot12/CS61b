@@ -11,7 +11,6 @@ import static ngrams.TimeSeries.MIN_YEAR;
 /**
  * An object that provides utility methods for making queries on the
  * Google NGrams dataset (or a subset thereof).
- *
  * An NGramMap stores pertinent data from a "words file" and a "counts
  * file". It is not a map in the strict sense, but it does provide additional
  * functionality.
@@ -21,15 +20,17 @@ import static ngrams.TimeSeries.MIN_YEAR;
 public class NGramMap {
 
     // TODO: Add any necessary static/instance variables.
-    private HashMap wordsdate;
+    private final HashMap wordsdate;
 
-    private TimeSeries countdate;
+    private final TimeSeries countdate;
 
     /**
      * Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME.
      */
 
     public NGramMap(String wordsFilename, String countsFilename) {
+        wordsdate = new HashMap();
+        countdate = new TimeSeries();
         In in = new In(wordsFilename);
         while (!in.isEmpty()){
             String[] linedate = in.readLine().split("\t");
@@ -107,8 +108,7 @@ public class NGramMap {
     public TimeSeries weightHistory(String word) {
         if(!wordsdate.containsKey(word))return new TimeSeries();
         TimeSeries date = (TimeSeries) wordsdate.get(word);
-        TimeSeries result = date.dividedBy(countdate);
-        return result;
+        return date.dividedBy(countdate);
     }
 
     /**
@@ -118,8 +118,15 @@ public class NGramMap {
      */
     public TimeSeries summedWeightHistory(Collection<String> words,
                                           int startYear, int endYear) {
+        TimeSeries result = new TimeSeries();
+        for(String i : words){
+            if(!wordsdate.containsKey(i))continue;
+            result = result.plus((TimeSeries) wordsdate.get(i));
+        }
+        result = new TimeSeries(result,startYear,endYear);
+        result = result.dividedBy(countdate);
         // TODO: Fill in this method.
-        return null;
+        return result;
     }
 
     /**
@@ -127,8 +134,14 @@ public class NGramMap {
      * exist in this time frame, ignore it rather than throwing an exception.
      */
     public TimeSeries summedWeightHistory(Collection<String> words) {
+        TimeSeries result = new TimeSeries();
+        for(String i : words){
+            if(!wordsdate.containsKey(i))continue;
+            result.plus((TimeSeries) wordsdate.get(i));
+        }
+        result = result.dividedBy(countdate);
         // TODO: Fill in this method.
-        return null;
+        return result;
     }
 
     // TODO: Add any private helper methods.
