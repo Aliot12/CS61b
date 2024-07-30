@@ -88,7 +88,7 @@ public class NGramMap {
         TimeSeries result = new TimeSeries();
         for(String i : words){
             if(!wordsdate.containsKey(i))continue;
-            result.plus((TimeSeries) wordsdate.get(i));
+            result = result.plus((TimeSeries) wordsdate.get(i));
         }
         result = result.dividedBy(countdate);
         return result;
