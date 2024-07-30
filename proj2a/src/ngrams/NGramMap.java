@@ -42,7 +42,7 @@ public class NGramMap {
 
 
     public TimeSeries countHistory(String word, int startYear, int endYear) {
-        // TODO: Fill in this method.
+        if(!wordsdate.containsKey(word))return new TimeSeries();
         return new TimeSeries((TimeSeries) wordsdate.get(word),startYear,endYear);
     }
 
@@ -73,14 +73,15 @@ public class NGramMap {
 
     public TimeSeries summedWeightHistory(Collection<String> words,
                                           int startYear, int endYear) {
-        TimeSeries result = new TimeSeries();
-        for(String i : words){
-            if(!wordsdate.containsKey(i))continue;
-            result = result.plus((TimeSeries) wordsdate.get(i));
-        }
-        result = new TimeSeries(result,startYear,endYear);
-        result = result.dividedBy(countdate);
-        // TODO: Fill in this method.
+//        TimeSeries result = new TimeSeries();
+//        for(String i : words){
+//            if(!wordsdate.containsKey(i))continue;
+//            result = result.plus((TimeSeries) wordsdate.get(i));
+//        }
+//        result = new TimeSeries(result,startYear,endYear);
+//        result = result.dividedBy(countdate);
+        TimeSeries result = summedWeightHistory(words);
+        result =  new TimeSeries(result,startYear,endYear);
         return result;
     }
 
