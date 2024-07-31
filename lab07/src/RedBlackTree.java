@@ -65,33 +65,45 @@ public class RedBlackTree<T extends Comparable<T>> {
         p.isBlack = c.isBlack;
         c.isBlack = tmp;
     }
-    private RBTreeNode fix(RBTreeNode p){
+    private RBTreeNode FixOne(RBTreeNode p){
         if( p.left == null) {//由于插入的逻辑结构，调用fix函数时的节点，至少有一个子树
-            p=rotateLeft(p);
+            return rotateLeft(p);//不变量1
         }
+        return p;
+    }
+    private RBTreeNode FixTwo(RBTreeNode p){
         if(p.left.left != null){//红一左红二左错，向右旋转
             if(!p.left.isBlack && !p.left.left.isBlack){
-                p = rotateRight(p);
+                return rotateRight(p);//不变量2 父节点和子节点不同时为红
             }
         }
+        return p;
+    }
+    private RBTreeNode FixTF(RBTreeNode p){
         if(p.right != null){
-            if(!p.left.isBlack && !p.right.isBlack)flipColors(p);//先判断是否为二子红，若不是则左旋
-            if(!p.right.isBlack)p =  rotateLeft(p);
+            if(!p.left.isBlack && !p.right.isBlack)flipColors(p);//先判断是否为二子红，若不是则左旋 不变量3
+            if(!p.right.isBlack) p =  rotateLeft(p);//不变量4
+            return p;
         }
+        return p;
+    }
+    private RBTreeNode fix(RBTreeNode p){
+        p = FixOne(p);
+        p = FixTwo(p);
+        p = FixTF(p);
         return p;
     }
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         // TODO: Insert (return) new red leaf node.
         if(node == null) return new RBTreeNode<>(false,item);
         int cmp = node.item.compareTo(item);
-        RBTreeNode child = (cmp > 0) ? node.left : node.right;
-        if(child == null){
-            if(cmp > 0) node.left = new RBTreeNode<>(false,item);
-            else node.right = new RBTreeNode<>(false,item);
+        if(cmp > 0){
+            if(node.left == null) node.left =  new RBTreeNode<>(false,item);
+            else node.left = insert(node.left,item);
         }
-        else {
-            if(cmp > 0) node.left = insert(child,item);
-            else node.right = insert(child,item);
+        if(cmp < 0){
+            if(node.right == null) node.right =  new RBTreeNode<>(false,item);
+            else node.right = insert(node.right,item);
         }
         return fix(node);//重点每一次递归都要调增
     }
