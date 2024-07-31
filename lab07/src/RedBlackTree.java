@@ -1,6 +1,5 @@
 public class RedBlackTree<T extends Comparable<T>> {
 
-    /* Root of the tree. */
     RBTreeNode<T> root;
 
     static class RBTreeNode<T> {
@@ -9,25 +8,10 @@ public class RedBlackTree<T extends Comparable<T>> {
         boolean isBlack;
         RBTreeNode<T> left;
         RBTreeNode<T> right;
-
-        /**
-         * Creates a RBTreeNode with item ITEM and color depending on ISBLACK
-         * value.
-         * @param isBlack
-         * @param item
-         */
         RBTreeNode(boolean isBlack, T item) {
             this(isBlack, item, null, null);
         }
 
-        /**
-         * Creates a RBTreeNode with item ITEM, color depending on ISBLACK
-         * value, left child LEFT, and right child RIGHT.
-         * @param isBlack
-         * @param item
-         * @param left
-         * @param right
-         */
         RBTreeNode(boolean isBlack, T item, RBTreeNode<T> left,
                    RBTreeNode<T> right) {
             this.isBlack = isBlack;
@@ -37,18 +21,10 @@ public class RedBlackTree<T extends Comparable<T>> {
         }
     }
 
-    /**
-     * Creates an empty RedBlackTree.
-     */
     public RedBlackTree() {
         root = null;
     }
 
-    /**
-     * Flips the color of node and its children. Assume that NODE has both left
-     * and right children
-     * @param node
-     */
     void flipColors(RBTreeNode<T> node) {
         node.isBlack = !node.isBlack;
         node.left.isBlack = !node.left.isBlack;
@@ -56,14 +32,8 @@ public class RedBlackTree<T extends Comparable<T>> {
         // TODO: YOUR CODE HERE
     }
 
-    /**
-     * Rotates the given node to the right. Returns the new root node of
-     * this subtree. For this implementation, make sure to swap the colors
-     * of the new root and the old root!
-     * @param node
-     * @return
-     */
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
+        swapclor(node,node.left);
         RBTreeNode tmp = node;
         node = node.left;
         tmp.left = node.right;
@@ -72,14 +42,8 @@ public class RedBlackTree<T extends Comparable<T>> {
         return node;
     }
 
-    /**
-     * Rotates the given node to the left. Returns the new root node of
-     * this subtree. For this implementation, make sure to swap the colors
-     * of the new root and the old root!
-     * @param node
-     * @return
-     */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
+        swapclor(node,node.right);
         RBTreeNode tmp = node;
         node = node.right;
         tmp.right = node.left;
@@ -88,34 +52,34 @@ public class RedBlackTree<T extends Comparable<T>> {
         return node;
     }
 
-    /**
-     * Helper method that returns whether the given node is red. Null nodes (children or leaf
-     * nodes) are automatically considered black.
-     * @param node
-     * @return
-     */
     private boolean isRed(RBTreeNode<T> node) {
         return node != null && !node.isBlack;
     }
-
-    /**
-     * Inserts the item into the Red Black Tree. Colors the root of the tree black.
-     * @param item
-     */
     public void insert(T item) {
         root = insert(root, item);
         root.isBlack = true;
     }
 
-    /**
-     * Inserts the given node into this Red Black Tree. Comments have been provided to help break
-     * down the problem. For each case, consider the scenario needed to perform those operations.
-     * Make sure to also review the other methods in this class!
-     * @param node
-     * @param item
-     * @return
-     */
-
+    private void swapclor(RBTreeNode p ,RBTreeNode c){
+        Boolean tmp = p.isBlack;
+        p.isBlack = c.isBlack;
+        c.isBlack = tmp;
+    }
+    private RBTreeNode fix(RBTreeNode p){
+        if( p.left == null) {//由于插入的逻辑结构，调用fix函数时的节点，至少有一个子树
+            p=rotateLeft(p);
+        }
+        if(p.left.left != null){//红一左红二左错，向右旋转
+            if(!p.left.isBlack && !p.left.left.isBlack){
+                p = rotateRight(p);
+            }
+        }
+        if(p.right != null){
+            if(!p.left.isBlack && !p.right.isBlack)flipColors(p);//先判断是否为二子红，若不是则左旋
+            if(!p.right.isBlack)p =  rotateLeft(p);
+        }
+        return p;
+    }
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         // TODO: Insert (return) new red leaf node.
         if(node == null) return new RBTreeNode<>(false,item);
@@ -125,16 +89,11 @@ public class RedBlackTree<T extends Comparable<T>> {
             if(cmp > 0) node.left = new RBTreeNode<>(false,item);
             else node.right = new RBTreeNode<>(false,item);
         }
-        else insert(child,item);
-        // TODO: Handle normal binary search tree insertion.
-
-        // TODO: Rotate left operation
-
-        // TODO: Rotate right operation
-
-        // TODO: Color flip
-
-        return null; //fix this return statement
+        else {
+            if(cmp > 0) node.left = insert(child,item);
+            else node.right = insert(child,item);
+        }
+        return fix(node);//重点每一次递归都要调增
     }
 
 }
